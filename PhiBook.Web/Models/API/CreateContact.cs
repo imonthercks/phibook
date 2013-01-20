@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace PhiBook.Web.Models
+namespace PhiBook.Web.Models.API
 {
     public class Contact
     {
@@ -27,10 +27,10 @@ namespace PhiBook.Web.Models
 
         public ContactAddress ConfirmedMailingAddress { get; set; }
 
-        public ContactAddress[] AllAddresses { get; set; }
+        public IList<ContactAddress> AllAddresses { get; set; }
 
-        public ContactEmail[] AllEmailAddresses { get; set; }
+        public IList<ContactEmail> AllEmailAddresses { get; set; }
 
-        public ContactPhone[] AllPhoneNumbers { get; set; }
+        public IList<ContactPhone> AllPhoneNumbers { get; set; }
     }
 }

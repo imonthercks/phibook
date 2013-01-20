@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Nancy;
 using PhiBook.Web.Models;
+using Nancy.ModelBinding;
 using Raven.Client;
 
 namespace PhiBook.Web.Modules
@@ -17,22 +19,37 @@ namespace PhiBook.Web.Modules
                                    .OrderBy(x => x.LastName)
                                    .ToList();
 
-                               return View["index", contacts];
+                               return Response.AsJson(contacts);
                            };
 
             Get["/{id}"] = parameters =>
                                {
-                                   var contact = ravenSession.Load<Contact>(parameters.id);
-                                   return View["edit", contact];
+                                   string contactId = "contact/" + parameters.id;
+                                   var contact = ravenSession.Load<Contact>(contactId);
+                                   return Response.AsJson(contact);
                                };
 
             Get["/create"] = parameters => View["create", new Contact()];
 
             Post["/"] = parameters =>
                             {
-                                var newContact = new Contact();
+                                Contact newContact = this.Bind();
+
+                                //Contact newContact = this.Bind("InitiationDate", "DateOfDeath", "ConfirmedPhoneNumbers", "ConfirmedEmailAddresses", "ConfirmedMailingAddresses",
+                                //    "AllAddresses", "AllEmailAddresses", "AllPhoneNumbers");
+                                //var newContact = new Contact
+                                //                     {
+                                //                         Id = "contact/348",
+                                //                         LastName = "Russell",
+                                //                         FirstName = "Christopher",
+                                //                         MiddleInitial = "J",
+                                //                         Status = "ALUMNUS",
+                                //                         InitiationDate = new DateTime(1994, 1, 15)
+                                //                     };
                                 // need to persist to raven and return
-                                return View["edit", newContact];
+
+                                ravenSession.Store(newContact);
+                                return Response.AsJson(newContact);
                             };
         }
     }

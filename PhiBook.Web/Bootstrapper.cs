@@ -22,6 +22,7 @@ namespace PhiBook.Web
 
             store.Initialize();
             store.DatabaseCommands.EnsureDatabaseExists("PhiBook");
+            store.DefaultDatabase = "PhiBook";
             container.Register<IDocumentStore>(store);
         }
 
