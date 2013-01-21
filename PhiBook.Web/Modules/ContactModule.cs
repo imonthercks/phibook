@@ -35,18 +35,9 @@ namespace PhiBook.Web.Modules
                             {
                                 Contact newContact = this.Bind();
 
-                                //Contact newContact = this.Bind("InitiationDate", "DateOfDeath", "ConfirmedPhoneNumbers", "ConfirmedEmailAddresses", "ConfirmedMailingAddresses",
-                                //    "AllAddresses", "AllEmailAddresses", "AllPhoneNumbers");
-                                //var newContact = new Contact
-                                //                     {
-                                //                         Id = "contact/348",
-                                //                         LastName = "Russell",
-                                //                         FirstName = "Christopher",
-                                //                         MiddleInitial = "J",
-                                //                         Status = "ALUMNUS",
-                                //                         InitiationDate = new DateTime(1994, 1, 15)
-                                //                     };
-                                // need to persist to raven and return
+                                newContact.DateOfDeath = newContact.DateOfDeath == DateTime.MinValue
+                                                             ? null
+                                                             : newContact.DateOfDeath;
 
                                 ravenSession.Store(newContact);
                                 return Response.AsJson(newContact);

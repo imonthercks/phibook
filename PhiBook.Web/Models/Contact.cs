@@ -17,9 +17,9 @@ namespace PhiBook.Web.Models
 
         public string Status { get; set; }
 
-        public DateTime InitiationDate { get; set; }
+        public DateTime? InitiationDate { get; set; }
 
-        public DateTime DateOfDeath { get; set; }
+        public DateTime? DateOfDeath { get; set; }
 
         public string ConfirmedPhoneNumbers { get; set; }
 
