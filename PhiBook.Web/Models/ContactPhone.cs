@@ -10,5 +10,9 @@ namespace PhiBook.Web.Models
         public string Phone { get; set; }
 
         public string PhoneType { get; set; }
+
+        public string Source { get; set; }
+
+        public DateTime Updated { get; set; }
     }
 }

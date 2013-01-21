@@ -10,5 +10,9 @@ namespace PhiBook.Web.Models
         public string Email { get; set; }
 
         public string EmailType { get; set; }
+
+        public string Source { get; set; }
+
+        public DateTime Updated { get; set; }
     }
 }

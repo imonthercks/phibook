@@ -19,5 +19,9 @@ namespace PhiBook.Web.Models
 
         public string Country { get; set; }
 
+        public string Source { get; set; }
+
+        public DateTime Updated { get; set; }
+
     }
 }
