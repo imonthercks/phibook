@@ -29,8 +29,6 @@ namespace PhiBook.Web.Modules
                                    return Response.AsJson(contact);
                                };
 
-            Get["/create"] = parameters => View["create", new Contact()];
-
             Post["/"] = parameters =>
                             {
                                 Contact newContact = this.Bind();
