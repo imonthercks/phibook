@@ -1,0 +1,21 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<string>
+
+@{
+    Layout = "_Layout.cshtml";
+}
+
+<div>
+    <form method="POST" action="login">
+    Username
+    <input type="text" id="Username" name="Username"/>
+    <br />
+    Password
+    <input id="Password" type="password" name="Password"/>
+    <br />
+        <button type="submit" id="submitButton">
+            Login</button>
+            <input type="hidden" name="url" value="@Model"/>
+    </form>
+</div>
+<div id="errorBox" style="display: none;">
+    Invalid Username or Password</div>

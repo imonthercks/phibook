@@ -9,7 +9,7 @@ using Raven.Client;
 
 namespace PhiBook.Web.Modules
 {
-    public class ContactModule : BaseModule
+    public class ContactModule : SecureModule
     {
         public ContactModule(IDocumentSession ravenSession) : base("/contact")
         {
