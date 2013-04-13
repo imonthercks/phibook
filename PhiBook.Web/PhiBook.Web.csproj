@@ -15,6 +15,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -107,6 +108,7 @@
     <Compile Include="Queries\AuthQuery.cs" />
     <Compile Include="Queries\AuthUserByApiKey.cs" />
     <Compile Include="Queries\Query.cs" />
+    <Compile Include="ViewModels\AuthCredentials.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

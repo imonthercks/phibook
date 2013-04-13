@@ -7,8 +7,10 @@ using Nancy;
 using Nancy.Authentication.Stateless;
 using Nancy.Cookies;
 using Nancy.Cryptography;
+using Nancy.ModelBinding;
 using Nancy.Responses;
 using PhiBook.Web.Queries;
+using PhiBook.Web.ViewModels;
 using Raven.Client;
 
 namespace PhiBook.Web.Modules.Auth
@@ -18,23 +20,40 @@ namespace PhiBook.Web.Modules.Auth
         public AuthModule(IDocumentSession ravenSession)
             : base("/auth/")
         {
+#if !DEBUG
+            this.RequiresHttps(true);
+#endif
+
             Get["/login"] = parameters => View["login.cshtml", (string)this.Request.Query.url];
             
             //the Post["/login"] method is used mainly to fetch the api key for subsequent calls
             Post["/login"] = x =>
-                            {
-                                var user =
-                                    Query(new AuthQuery((string)this.Request.Form.Username,
-                                                        (string)this.Request.Form.Password));
+                                 {
+                                     var requestContent = this.Bind<AuthCredentials>();
+                                     
+                                     if (requestContent == null)
+                                         requestContent = new AuthCredentials
+                                                              {
+                                                                  User = Request.Form.Username,
+                                                                  Password = Request.Form.Password
+                                                              };
+
+
+                                var user = Query(new AuthQuery(requestContent.User, requestContent.Password));
 
                                 string apiKey = user.ApiKey;
 
                                 if (string.IsNullOrEmpty(apiKey))
                                     return new Response { StatusCode = HttpStatusCode.Unauthorized };
 
-                                var response = new RedirectResponse(HttpUtility.HtmlDecode(this.Request.Form.url));
+                                var responseUrl = this.Request.Form.url;
+
                                 var authCookie = BuildCookie(apiKey, DateTime.Now.AddDays(1));
-                                response.AddCookie(authCookie);
+
+                                if (string.IsNullOrEmpty(responseUrl))
+                                    return (new Response {StatusCode = HttpStatusCode.NoContent}).AddCookie(authCookie);
+
+                                var response = new RedirectResponse(HttpUtility.HtmlDecode(responseUrl)).AddCookie(authCookie);
 
                                 return response;
                             };
