@@ -7,7 +7,7 @@ namespace PhiBook.Web.ViewModels
 {
     public class AuthCredentials
     {
-        public string User { get; set; }
+        public string Username { get; set; }
         public string Password { get; set; }
     }
 }
