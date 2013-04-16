@@ -21,7 +21,7 @@ namespace PhiBook.Web.Modules.Auth
             : base("/auth/")
         {
 #if !DEBUG
-            this.RequiresHttps(true);
+            this.RequiresXForwardProtoHeader(true);
 #endif
 
             Get["/login"] = parameters => View["login.cshtml", (string)this.Request.Query.url];
