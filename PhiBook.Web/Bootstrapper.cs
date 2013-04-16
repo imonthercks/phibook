@@ -5,6 +5,7 @@ using System.Web;
 using Nancy;
 using Nancy.Authentication.Stateless;
 using Nancy.Cryptography;
+using Nancy.Elmah;
 using Nancy.Extensions;
 using Nancy.Security;
 using PhiBook.Web.Queries;
@@ -16,6 +17,12 @@ namespace PhiBook.Web
 {
     public class Bootstrapper : DefaultNancyBootstrapper
     {
+        protected override void ApplicationStartup(Nancy.TinyIoc.TinyIoCContainer container, Nancy.Bootstrapper.IPipelines pipelines)
+        {
+            base.ApplicationStartup(container, pipelines);
+            Elmahlogging.Enable(pipelines, "elmah");
+        }
+
         protected override void ConfigureApplicationContainer(Nancy.TinyIoc.TinyIoCContainer container)
         {
             base.ConfigureApplicationContainer(container);
