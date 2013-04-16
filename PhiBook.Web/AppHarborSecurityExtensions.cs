@@ -34,9 +34,10 @@ namespace PhiBook.Web
             {
                 Response response = null;
                 var request = ctx.Request;
-                if (!request.Url.IsSecure)
+
+                if (ctx.Request.Headers["X-Forwarded-Proto"].FirstOrDefault(x => x == "https") == null)
                 {
-                    if (redirect && ctx.Request.Headers["X-Forwarded-Proto"].FirstOrDefault(x => x == "https") != null)
+                    if (redirect)
                     {
                         var redirectUrl = request.Url.Clone();
                         redirectUrl.Scheme = "https";
@@ -44,10 +45,9 @@ namespace PhiBook.Web
                     }
                     else
                     {
-                        response = new Response { StatusCode = HttpStatusCode.Forbidden };
+                        response = new Response {StatusCode = HttpStatusCode.Forbidden};
                     }
                 }
-
                 return response;
             };
         }
