@@ -31,14 +31,6 @@ namespace PhiBook.Web.Modules.Auth
                                  {
                                      var requestContent = this.Bind<AuthCredentials>();
                                      
-                                     if (requestContent == null)
-                                         requestContent = new AuthCredentials
-                                                              {
-                                                                  Username = Request.Form.Username,
-                                                                  Password = Request.Form.Password
-                                                              };
-
-
                                 var user = Query(new AuthQuery(requestContent.Username, requestContent.Password));
 
                                 string apiKey = user.ApiKey;
