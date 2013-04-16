@@ -11,7 +11,7 @@ namespace PhiBook.Web.Modules
         public SecureModule()
         {
 #if !DEBUG
-            this.RequiresHttps(true);
+            this.RequiresXForwardProtoHeader(true);
 #endif
             this.RequiresAuthentication();
         }
@@ -20,7 +20,7 @@ namespace PhiBook.Web.Modules
             : base(modulePath)
         {
 #if !DEBUG
-            this.RequiresHttps(true);
+            this.RequiresXForwardProtoHeader(true);
 #endif
             this.RequiresAuthentication();
         }
