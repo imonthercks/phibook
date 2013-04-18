@@ -11,7 +11,7 @@ namespace PhiBook.Web.Modules
 {
     public class ContactModule : SecureModule
     {
-        public ContactModule(IDocumentSession ravenSession) : base("/contact")
+        public ContactModule(IDocumentSession ravenSession) : base("/api/contact")
         {
             Get["/"] = parameters =>
                            {
