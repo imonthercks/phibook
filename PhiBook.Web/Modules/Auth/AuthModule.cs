@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
-using System.Web.Configuration;
 using Nancy;
-using Nancy.Authentication.Stateless;
 using Nancy.Cookies;
 using Nancy.Cryptography;
 using Nancy.ModelBinding;
@@ -24,7 +20,7 @@ namespace PhiBook.Web.Modules.Auth
             this.RequiresXForwardProtoHeader(true);
 #endif
 
-            Get["/login"] = parameters => View["login.cshtml", (string)this.Request.Query.url];
+            Get["/login"] = parameters => View["login.cshtml", (string)Request.Query.url];
             
             //the Post["/login"] method is used mainly to fetch the api key for subsequent calls
             Post["/login"] = x =>
@@ -38,7 +34,7 @@ namespace PhiBook.Web.Modules.Auth
                                 if (string.IsNullOrEmpty(apiKey))
                                     return new Response { StatusCode = HttpStatusCode.Unauthorized };
 
-                                var responseUrl = this.Request.Form.url;
+                                var responseUrl = Request.Form.url;
 
                                 var authCookie = BuildCookie(apiKey, DateTime.Now.AddDays(1));
 
@@ -53,7 +49,8 @@ namespace PhiBook.Web.Modules.Auth
             //do something to destroy the api key, maybe?                    
             Delete["/"] = x =>
                               {
-                                  var apiKey = (string) this.Request.Form.ApiKey;
+                                  // Use the apiKey to find user in datastore and delete
+                                  //var apiKey = (string) this.Request.Form.ApiKey;
                                   return new Response {StatusCode = HttpStatusCode.OK};
                               };
 
