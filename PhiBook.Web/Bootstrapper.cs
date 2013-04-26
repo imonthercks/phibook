@@ -8,6 +8,7 @@ using Nancy.Cryptography;
 using Nancy.Elmah;
 using Nancy.Extensions;
 using Nancy.Security;
+using PhiBook.Web.Models.Auth;
 using PhiBook.Web.Queries;
 using Raven.Client;
 using Raven.Client.Document;
@@ -19,6 +20,7 @@ namespace PhiBook.Web
     {
         protected override void ApplicationStartup(Nancy.TinyIoc.TinyIoCContainer container, Nancy.Bootstrapper.IPipelines pipelines)
         {
+            base.ApplicationStartup(container, pipelines);
             base.ApplicationStartup(container, pipelines);
             Elmahlogging.Enable(pipelines, "elmah");
         }
@@ -33,8 +35,6 @@ namespace PhiBook.Web
                             };
 
             store.Initialize();
-            //store.DatabaseCommands.EnsureDatabaseExists("PhiBook");
-            //store.DefaultDatabase = "PhiBook";
             container.Register<IDocumentStore>(store);
         }
 
@@ -45,6 +45,7 @@ namespace PhiBook.Web
             var docStore = container.Resolve<IDocumentStore>();
             var docSession = docStore.OpenSession();
             container.Register(docSession);
+            context.Items.Add("RavenSession", docSession);
         }
 
         protected override void RequestStartup(Nancy.TinyIoc.TinyIoCContainer container, Nancy.Bootstrapper.IPipelines pipelines, NancyContext context)
@@ -85,7 +86,14 @@ namespace PhiBook.Web
 
             if (!string.IsNullOrEmpty(apiKey))
             {
-                return new IdentityByApiKey(apiKey).Execute();
+                var session = context.Items["RavenSession"] as IDocumentSession;
+                if (session == null)
+                    return null;
+
+                var user = session.Query<AuthUser>()
+                    .FirstOrDefault(x => x.ApiKey == apiKey);
+
+                if (user != null) return new PhiBookIdentity { UserName = user.UserId };
             }
 
             return null;
@@ -103,7 +111,7 @@ namespace PhiBook.Web
                 {
                     context.Response = context.GetRedirect(
                         string.Format("{0}?{1}={2}",
-                        context.ToFullPath("~auth/login"),
+                        context.ToFullPath("~/auth/login"),
                         "url",
                         context.ToFullPath("~" + context.Request.Path + HttpUtility.UrlEncode(context.Request.Url.Query))));
                 }
