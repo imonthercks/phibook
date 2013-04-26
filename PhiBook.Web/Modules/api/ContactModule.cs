@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Nancy;
 using PhiBook.Web.Models;
 using Nancy.ModelBinding;
 using Raven.Client;
 
-namespace PhiBook.Web.Modules
+namespace PhiBook.Web.Modules.Api
 {
     public class ContactModule : SecureModule
     {
@@ -17,6 +15,7 @@ namespace PhiBook.Web.Modules
                            {
                                var contacts = ravenSession.Query<Contact>()
                                    .OrderBy(x => x.LastName)
+                                   .Take(15)
                                    .ToList();
 
                                return Response.AsJson(contacts);

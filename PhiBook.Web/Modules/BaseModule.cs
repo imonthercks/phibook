@@ -6,23 +6,18 @@ using Nancy;
 using Nancy.Extensions;
 using Nancy.Security;
 using PhiBook.Web.Queries;
+using Raven.Client;
 
 namespace PhiBook.Web.Modules
 {
-    public class BaseModule : NancyModule
+    public abstract class BaseModule : NancyModule
     {
-        public BaseModule()
+        protected BaseModule()
         {
         }
 
-        public BaseModule(string modulePath) : base(modulePath)
+        protected BaseModule(string modulePath) : base(modulePath)
         {
         }
-
-        public TResult Query<TResult>(Query<TResult> query)
-        {
-            return query.Execute();
-        }
-
     }
 }

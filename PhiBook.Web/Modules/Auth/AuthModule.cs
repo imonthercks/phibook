@@ -5,7 +5,7 @@ using Nancy.Cookies;
 using Nancy.Cryptography;
 using Nancy.ModelBinding;
 using Nancy.Responses;
-using PhiBook.Web.Queries;
+using PhiBook.Web.Models.Auth;
 using PhiBook.Web.ViewModels;
 using Raven.Client;
 
@@ -25,37 +25,40 @@ namespace PhiBook.Web.Modules.Auth
             //the Post["/login"] method is used mainly to fetch the api key for subsequent calls
             Post["/login"] = x =>
                                  {
-                                     var requestContent = this.Bind<AuthCredentials>();
-                                     
-                                var user = Query(new AuthQuery(requestContent.Username, requestContent.Password));
+                                     var requestContent = this.Bind<AuthCredential>();
 
-                                string apiKey = user.ApiKey;
+                                     var authUser = ravenSession.Load<AuthUser>(requestContent.Username);
 
-                                if (string.IsNullOrEmpty(apiKey))
-                                    return new Response { StatusCode = HttpStatusCode.Unauthorized };
+                                     if (authUser == null ||
+                                         authUser.HashedPassword != HashPassword(requestContent.Password))
+                                         return new Response {StatusCode = HttpStatusCode.Unauthorized};
 
-                                var responseUrl = Request.Form.url;
+                                     var apiKey = authUser.ApiKey;
 
-                                var authCookie = BuildCookie(apiKey, DateTime.Now.AddDays(1));
+                                     var responseUrl = Request.Form.url;
 
-                                if (string.IsNullOrEmpty(responseUrl))
-                                    return (new Response {StatusCode = HttpStatusCode.NoContent}).AddCookie(authCookie);
+                                     var authCookie = BuildCookie(apiKey, DateTime.Now.AddDays(1));
 
-                                var response = new RedirectResponse(HttpUtility.HtmlDecode(responseUrl)).AddCookie(authCookie);
+                                     if (string.IsNullOrEmpty(responseUrl))
+                                         return
+                                             (new Response {StatusCode = HttpStatusCode.NoContent}).AddCookie(authCookie);
 
-                                return response;
-                            };
+                                     var response =
+                                         new RedirectResponse(HttpUtility.HtmlDecode(responseUrl)).AddCookie(authCookie);
+
+                                     return response;
+                                 };
 
             //do something to destroy the api key, maybe?                    
-            Delete["/"] = x =>
-                              {
-                                  // Use the apiKey to find user in datastore and delete
-                                  //var apiKey = (string) this.Request.Form.ApiKey;
-                                  return new Response {StatusCode = HttpStatusCode.OK};
-                              };
+            Delete["/"] = x => new Response {StatusCode = HttpStatusCode.OK};
 
 
 
+        }
+
+        private static string HashPassword(string password)
+        {
+            return password;
         }
 
         /// <summary>
