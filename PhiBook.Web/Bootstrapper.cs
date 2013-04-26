@@ -107,7 +107,7 @@ namespace PhiBook.Web
         {
             return context =>
             {
-                if (context.Response.StatusCode == HttpStatusCode.Unauthorized)
+                if (context.Response.StatusCode == HttpStatusCode.Unauthorized && !context.Request.Path.EndsWith("auth/login"))
                 {
                     context.Response = context.GetRedirect(
                         string.Format("{0}?{1}={2}",
