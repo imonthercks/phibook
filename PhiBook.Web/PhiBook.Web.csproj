@@ -120,7 +120,6 @@
     <Compile Include="Modules\RavenModule.cs" />
     <Compile Include="Modules\SecureModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Queries\AuthQuery.cs" />
     <Compile Include="Queries\AuthUserByApiKey.cs" />
     <Compile Include="Queries\PhiBookIdentity.cs" />
     <Compile Include="Queries\Query.cs" />
