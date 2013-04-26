@@ -1,0 +1,1 @@
+bin\Debug\PhiBook.BatchLoader.exe "C:\Users\cj\Downloads\ke alumni.csv" http://localhost.:2727 20130120_MHC
