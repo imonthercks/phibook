@@ -83,7 +83,7 @@ namespace PhiBook.BatchLoader
 
             var list = engine.ReadFile(tmpImportFile, -1);
 
-            var client = new RestClient {BaseUrl = postUrl, Authenticator = new PhiBookAuthenticator(userName, password.ToString())};
+            var client = new RestClient {BaseUrl = postUrl, Authenticator = new PhiBookAuthenticator(postUrl, userName, password.ToString())};
 
             foreach (var contact in list)
             {
